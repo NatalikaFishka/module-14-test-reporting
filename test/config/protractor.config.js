@@ -1,5 +1,5 @@
 const path = require('path');
-const yargs = require('yargs');
+const yargs = require('yargs').argv;
 const reporter = require('cucumber-html-reporter');
 
 const reporterOptions = {
@@ -18,8 +18,6 @@ exports.config = {
   frameworkPath: require.resolve('protractor-cucumber-framework'),
   capabilities: {
     browserName: 'chrome',
-    shardTestFiles: yargs.instances > 1,
-    maxInstances: yargs.instances || 1,
     chromeOptions: {
       args: ['--no-sandbox', '--window-size=1920,1080']
     },
@@ -32,7 +30,9 @@ exports.config = {
     format: ['json:./test/reports/report.json', './node_modules/cucumber-pretty'],
     tags: yargs.tags || '@smoke'
   },
+
   afterLaunch: () => {
     return reporter.generate(reporterOptions);
-  }
+  },
+  rootElement: 'html.ng-scope',
 };

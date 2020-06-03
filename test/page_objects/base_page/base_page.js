@@ -14,7 +14,7 @@ class BasePage {
     return browser.get(url);
   };
 
-  getCurrenUrl() {
+  getCurrentUrl() {
     return browser.getCurrentUrl();
   };
 

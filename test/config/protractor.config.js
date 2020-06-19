@@ -1,14 +1,20 @@
 const path = require('path');
 const yargs = require('yargs').argv;
-const reporter = require('cucumber-html-reporter');
+const htmlReporter = require('cucumber-html-reporter');
+const junitReporter = require('cucumber-junit-convert');
 
-const reporterOptions = {
+const htmlReporterOptions = {
   theme: 'bootstrap',
   jsonFile: path.join(__dirname, '../reports/report.json'),
   output: path.join(__dirname, '../reports/cucumber_report.html'),
   reportSuiteAsScenarios: true,
   launchReport: true
 };
+
+const junitReporterOptions = {
+  inputJsonFile: path.join(__dirname, '../reports/report.json'),
+  outputXmlFile: path.join(__dirname, '../reports/cucumber_report.xml')
+}
 
 exports.config = {
   allScriptsTimeout: 60000,
@@ -28,11 +34,12 @@ exports.config = {
     require: [path.resolve('./test/step_definitions/*.js')],
     ignoreUncaughtExceptions: true,
     format: ['json:./test/reports/report.json', './node_modules/cucumber-pretty'],
-    tags: yargs.tags || '@smoke'
+    tags: yargs.tags || '@full'
   },
 
   afterLaunch: () => {
-    return reporter.generate(reporterOptions);
+    htmlReporter.generate(htmlReporterOptions);
+    junitReporter.convert(junitReporterOptions);
   },
   rootElement: 'html.ng-scope',
 };
